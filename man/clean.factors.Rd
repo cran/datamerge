@@ -1,0 +1,40 @@
+\name{clean.factors}
+\alias{clean.factors}
+\title{Cleaning factors}
+\usage{
+  clean.factors(df, clear.blank = TRUE, drop.levels = TRUE,
+    drop.columns = TRUE, fac2num = TRUE, char2fac = 0.5,
+    verbose = TRUE)
+}
+\arguments{
+  \item{df}{A data frame to operate on.}
+
+  \item{clear.blank}{Whether to replace blank factor levels
+  (i.e. "") with \code{NA}.}
+
+  \item{drop.levels}{Whether to drop unused factor levels.}
+
+  \item{drop.columns}{Whether to drop empty columns (all
+  \code{NA}).}
+
+  \item{fac2num}{Whether to convert factors with numeric
+  levels to numeric.}
+
+  \item{char2fac}{A threshold for converting characters
+  into factors. If the percentage of unique values is less
+  than this value the character is converted. \code{NA} is
+  omitted.}
+
+  \item{verbose}{Whether to print a summary of changes.}
+}
+\value{
+  A new data frame with modified factor variables.
+}
+\description{
+  Removes empty factor levels and converts to numeric or
+  character where appropriate.
+}
+\author{
+  Christofer \enc{Bäcklin}{Backlin}
+}
+
