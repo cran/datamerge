@@ -1,48 +1,46 @@
-require("xtermStyle")
-
-##' Merge data frames
-##'
-##' This function combines data from data frames in falling priority. That is
-##' whenever the first data frame is missing a row, column and/or value it will
-##' be taken from the first following data frame which does have it.
-##'
-##' The task the function was written to solve is to merge a collection of
-##' inconsistent versioned xls files. To do this import all the files using
-##' \code{\link[utils]{read.csv}} or similar, make sure row and column names are
-##' consistent (otherwise they wont be recognized as matching), run
-##' \code{version.merge} and manually take care of the problems reported.
-##'
-##' @param ... A list of data frames to be merged with falling priority.
-##' @param add.cols Logical indicating if columns missing in frames with higher
-##'   priority should be added from frames with lower priority.
-##' @param add.rows Logical indicating if rows missing in frames with higher
-##'   priority should be added from frames with lower priority.
-##' @param add.values Logical indicating if missing values in frames with higher
-##'   priority should be imputed from frames with lower priority.
-##' @param verbose Logical indicating if a summary should be displayed.
-##' @return A single merged data frame.
-##'
-##' @examples
-##' # Make 3 similar data frames
-##' frames <- lapply(1:3, function(i){
-##'     d <- data.frame(matrix(runif(60), 10, 6))
-##'     d[[sample(6, 1)]][sample(10, 5)] <- NA
-##'     rownames(d) <- paste("obj_", sample(20, 10), sep="")
-##'     names(d) <- c(paste("feat_", sort(sample(8, 6)), sep=""))
-##'     return(d)
-##' })
-##' merged.frame <- version.merge(frames[[1]], frames[[2]], frames[[3]],
-##'     add.values=TRUE, verbose=TRUE)
-##'
-##' @author Christofer \enc{Bäcklin}{Backlin}
-##' @export
+#' Merge data frames
+#'
+#' This function combines data from data frames in falling priority. That is
+#' whenever the first data frame is missing a row, column and/or value it will
+#' be taken from the first following data frame which does have it.
+#'
+#' The task the function was written to solve is to merge a collection of
+#' inconsistent versioned xls files. To do this import all the files using
+#' \code{\link[utils]{read.csv}} or similar, make sure row and column names are
+#' consistent (otherwise they wont be recognized as matching), run
+#' \code{version.merge} and manually take care of the problems reported.
+#'
+#' @param ... A list of data frames to be merged with falling priority.
+#' @param add.cols Logical indicating if columns missing in frames with higher
+#'   priority should be added from frames with lower priority.
+#' @param add.rows Logical indicating if rows missing in frames with higher
+#'   priority should be added from frames with lower priority.
+#' @param add.values Logical indicating if missing values in frames with higher
+#'   priority should be imputed from frames with lower priority.
+#' @param verbose Logical indicating if a summary should be displayed.
+#' @return A single merged data frame.
+#' @examples
+#' # Make 3 similar data frames
+#' frames <- lapply(1:3, function(i){
+#'     d <- data.frame(matrix(runif(60), 10, 6))
+#'     d[[sample(6, 1)]][sample(10, 5)] <- NA
+#'     rownames(d) <- paste("obj_", sample(20, 10), sep="")
+#'     names(d) <- c(paste("feat_", sort(sample(8, 6)), sep=""))
+#'     return(d)
+#' })
+#' merged.frame <- version.merge(frames[[1]], frames[[2]], frames[[3]],
+#'     add.values=TRUE, verbose=TRUE)
+#'
+#' @author Christofer \enc{Bäcklin}{Backlin}
+#' @import xtermStyle
+#' @export
 version.merge <- function(..., add.cols=TRUE, add.rows=TRUE, add.values=FALSE, verbose=TRUE){
     frames <- list(...)
     frame.names <- sapply(match.call()[-1], deparse)[1:length(frames)]
     pal <- if(options("color.scheme") == "dark on light") "Dark2" else "Set2"
     for(i in 1:length(frame.names)){
-        frame.names[i] <- sprintf("`%s` %s", style(frame.names[i], fg=xterm.pal(pal)[[1]][i]),
-            style.dim(sprintf("#%i", i)))
+        frame.names[i] <- sprintf("`%s` %s", style(frame.names[i], fg=xterm.pal()[[pal]][i]),
+            sprintf("#%i", i))
     }
     
     if(any(!sapply(frames, is.data.frame)))
@@ -151,7 +149,7 @@ version.merge <- function(..., add.cols=TRUE, add.rows=TRUE, add.values=FALSE, v
             cat("\nColumns:\n")
             indent.size <- max(nchar(names(frames[[1]]))) + 2
             for(i in 1:length(col.history)){
-                cat(style.auto(frames[[1]][[i]], names(col.history)[i], bg=NULL))
+                cat(style.auto(frames[[1]][[i]], names(col.history)[i]))
                 for(j in 1:length(col.history[[i]])){
                     cat(sprintf("%s%s\n", paste(rep(" ", indent.size - nchar(names(col.history)[i])*(j==1)), collapse=""), col.history[[i]][j]))
                 }
@@ -163,25 +161,25 @@ version.merge <- function(..., add.cols=TRUE, add.rows=TRUE, add.values=FALSE, v
     return(frames[[1]])
 }
 
-##' Cleaning factors
-##'
-##' Removes empty factor levels and converts to numeric or character where
-##' appropriate.
-##'
-##' @param df A data frame to operate on.
-##' @param clear.blank Whether to replace blank factor levels (i.e. "") with
-##'   \code{NA}.
-##' @param drop.levels Whether to drop unused factor levels.
-##' @param drop.columns Whether to drop empty columns (all \code{NA}).
-##' @param fac2num Whether to convert factors with numeric levels to
-##'   numeric.
-##' @param char2fac A threshold for converting characters into factors. If
-##'   the percentage of unique values is less than this value the character is
-##'   converted. \code{NA} is omitted.
-##' @param verbose Whether to print a summary of changes.
-##' @return A new data frame with modified factor variables.
-##' @author Christofer \enc{Bäcklin}{Backlin}
-##' @export
+#' Cleaning factors
+#'
+#' Removes empty factor levels and converts to numeric or character where
+#' appropriate.
+#'
+#' @param df A data frame to operate on.
+#' @param clear.blank Whether to replace blank factor levels (i.e. "") with
+#'   \code{NA}.
+#' @param drop.levels Whether to drop unused factor levels.
+#' @param drop.columns Whether to drop empty columns (all \code{NA}).
+#' @param fac2num Whether to convert factors with numeric levels to
+#'   numeric.
+#' @param char2fac A threshold for converting characters into factors. If
+#'   the percentage of unique values is less than this value the character is
+#'   converted. \code{NA} is omitted.
+#' @param verbose Whether to print a summary of changes.
+#' @return A new data frame with modified factor variables.
+#' @author Christofer \enc{Bäcklin}{Backlin}
+#' @export
 clean.factors <- function(df, clear.blank=TRUE, drop.levels=TRUE, drop.columns=TRUE,
                           fac2num=TRUE, char2fac=.5, verbose=TRUE){
     width <- max(sapply(names(df), nchar))
@@ -228,7 +226,7 @@ clean.factors <- function(df, clear.blank=TRUE, drop.levels=TRUE, drop.columns=T
         if(verbose){
             cat(sprintf("%s%s%s\n",
                         style.auto(orig.class, sprintf(sprintf("%%%is", width), name)),
-                        style.dim(": "),
+                        ": ",
                         paste(msg, collapse=sprintf(sprintf("\n%%%is", width+2), " "))))
         }
     }

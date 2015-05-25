@@ -1,7 +1,6 @@
-48cd8ac1b5d51fc3dba138aae18d484e *DESCRIPTION
-02ec61697c68393597b639983c5e91a9 *NAMESPACE
-3cd553187916afd0216102aa67e06824 *R/datamerge-package.R
-e6234700f16d82b967f962f15edaf466 *R/datamerge.R
-aaae6476f62336ffbeeff7d9ac052f7e *man/clean.factors.Rd
-c0347589c38bef64059ada0e0ddb0806 *man/datamerge-package.Rd
-0a262545c0e68cd4d0527b2c91b90216 *man/version.merge.Rd
+f200f00eb72c9b5abf9ff81028b210b0 *DESCRIPTION
+adec411844945236a1e553378fee1952 *NAMESPACE
+1396dfbbdbcb56fb796e0b2f9e3f7f8a *R/datamerge.R
+21be41ae5551c8214133d66ae202f363 *R/zzz.R
+39e9ca2dd8600ed0c13e4795d26661ee *man/clean.factors.Rd
+89fdc64998f7aac8479c0826d5f4cc85 *man/version.merge.Rd
